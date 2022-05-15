@@ -10,6 +10,7 @@ let instance = axios;
 //   });
 // }
 instance.defaults.withCredentials = true
+instance.defaults.baseURL = 'https://wx.request.huangjinyu.xyz:8100'
 instance.interceptors.response.use(function (response){
   return response
 }, function (error) {

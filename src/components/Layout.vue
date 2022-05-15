@@ -16,7 +16,7 @@
           <md-tabs class="md-primary" @md-changed="changeRoute">
             <md-tab id="Home" md-label="首页"></md-tab>
             <md-tab id="List" md-label="监考列表"></md-tab>
-            <md-tab id="Upload" md-label="上传"></md-tab>
+            <md-tab id="Upload" md-label="上传" v-if="user && user.job === '教务员'"></md-tab>
             <md-tab id="File" md-label="消息中心"></md-tab>
           </md-tabs>
         </div>
@@ -114,10 +114,13 @@ export default {
       },
       changePwd() {
         this.$router.push({name: 'UpdatePwd'})
+        this.menuVisible = false
+
       },
       loginOut() {
         this.$store.dispatch('loginUser/loginOut')
         this.menuVisible = false
+        this.$router.push({name: 'Login'})
       },
       loginIn() {
         this.$router.push({name: 'Login'})

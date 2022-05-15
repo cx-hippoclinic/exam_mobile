@@ -2,13 +2,13 @@
   <div>
     <md-field :class="messageClassId">
       <label>工号</label>
-      <md-input v-model="loginId" required></md-input>
+      <md-input v-model="loginId" type="number" required></md-input>
       <span class="md-helper-text">输入10位教务系统的工号</span>
       <span class="md-error">{{idErrMessage}}</span>
     </md-field>
     <md-field  :class="messageClassPwd">
       <label>密码</label>
-      <md-input v-model="password" required></md-input>
+      <md-input v-model="password" type="password" required></md-input>
       <span class="md-helper-text">默认密码123456</span>
       <span class="md-error">{{pwdErrMessage}}</span>
     </md-field>
@@ -76,7 +76,6 @@ export default {
         username: +this.loginId,
         password: +this.password
       }).then(res=>{
-        console.log(res)
         if(res){
           this.showSnackbar = true
           this.msg = res.msg

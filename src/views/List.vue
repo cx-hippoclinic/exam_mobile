@@ -1,7 +1,7 @@
 <template>
   <div>
     <md-empty-state
-        v-if="examList.length === 0"
+        v-if="examList && examList.length === 0"
         class="md-primary"
         md-icon="free_cancellation"
         md-label="暂时还没有被安排监考"
@@ -68,7 +68,7 @@ export default {
   data: () => ({
     active: false,
     value: null,
-    examList: [],
+    examList: null,
     currentChange: null,
     showSnackbar: false,
     msg: ''
@@ -85,11 +85,12 @@ export default {
       if(data.code === '200'){
         this.examList = data.data.map(it=>{
           if(it['监考教师2']){
-            it.otherTeacher = user.name === it['监考教师1'] ? it['监考教师2']:it['监考教师1']
+            it.otherTeacher = this.user.name === it['监考教师1'] ? it['监考教师2']:it['监考教师1']
           }
           return it
         })
-
+      }else {
+        this.examList = []
       }
     }
 
@@ -102,7 +103,7 @@ export default {
     async sendApply(){
       const res = await submitApplyServe({
         id: this.currentChange.id,
-        teacher_name: this.currentChange['监考教师1'],
+        teacher_name: this.user.name,
         change_teacher_name: this.value
       })
       this.showSnackbar = true

@@ -3,25 +3,26 @@
     <md-field :class="messageClassId">
       <label>旧密码</label>
       <md-input v-model="loginId" required></md-input>
-      <span class="md-helper-text">默认密码是123123</span>
+      <span class="md-helper-text">默认密码是123456</span>
       <span class="md-error">{{idErrMessage}}</span>
     </md-field>
     <md-field  :class="messageClassPwd">
       <label>新密码</label>
-      <md-input v-model="password" required></md-input>
+      <md-input v-model="password" type="password" required></md-input>
       <span class="md-helper-text">密码长度需要大于等于6位</span>
       <span class="md-error">{{pwdErrMessage}}</span>
     </md-field>
     <md-field  :class="messageClassPwdCom">
       <label>确认密码</label>
-      <md-input v-model="passwordCom" required></md-input>
+      <md-input v-model="passwordCom" type="password" required></md-input>
       <span class="md-helper-text">该密码需要和上面输入的密码相同</span>
       <span class="md-error">{{pwdComErrMessage}}</span>
     </md-field>
-    <md-button class="md-raised  md-primary login-position" @click="login">登录</md-button>
+    <md-button class="md-raised  md-primary login-position" @click="login">提交</md-button>
   </div>
 </template>
 <script>
+import { changePwdServe } from '@/service/login'
 export default {
   name:'UpdatePwd',
   data(){
@@ -53,7 +54,7 @@ export default {
     },
   },
   methods:{
-    login(){
+    async login(){
       this.pwdErrMessage = ''
       this.idErrMessage = ''
       this.startCheck = true
@@ -77,6 +78,18 @@ export default {
         return
       }
       console.log(this.loginId,this.password)
+      const {data} = await changePwdServe({
+        user_id: this.$store.state.loginUser.userData.id,
+        new_pwd: this.password,
+        old_pwd: this.loginId,
+      })
+      if(data.code === 200){
+        await this.$store.dispatch('loginUser/loginOut')
+        this.$router.push({name: 'Login'})
+      }else {
+        console.log(data.msg)
+      }
+
     }
   }
 }

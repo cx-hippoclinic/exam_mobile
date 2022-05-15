@@ -1,5 +1,4 @@
-import { loginServe, whoAmIServe } from '@/service/login'
-import { clearCookie } from "@/utli/cookieManger"
+import { loginServe, whoAmIServe, loginOutServe } from '@/service/login'
 
 export default {
   namespaced: true,
@@ -30,6 +29,7 @@ export default {
         commit('setIsLoading', false)
         return res.data
       }else {
+        commit('setIsLoading', false)
         return res.data
       }
 
@@ -37,14 +37,23 @@ export default {
 
     loginOut({commit}){
       commit('setUser', null)
-      clearCookie('loginId')
+      loginOutServe()
+      // clearCookie('sessionid')
+      // window.localStorage.removeItem('token')
     },
 
     async whoAmI({commit}){
       commit('setIsLoading', true)
       try {
         const res = await whoAmIServe()
-        commit('setUser', res.data.data)
+        if(code === 0){
+          return
+        }
+        commit('setUser', {
+          name: res.data.name,
+          job: res.data.role,
+          id: res.data['user_id']}
+        )
         commit('setIsLoading', false)
         return res.data.data
       }catch (err){
